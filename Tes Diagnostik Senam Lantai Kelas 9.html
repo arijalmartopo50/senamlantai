@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tes Diagnostik PJOK Kelas 9 - Senam Lantai</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
+  .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
+  h2, h3 { text-align: center; }
+  .hidden { display: none; }
+  .question { margin-bottom: 15px; }
+  button { background: #2196f3; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+  button:hover { background: #1976d2; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Halaman Identitas -->
+  <div id="startPage">
+    <h2>Tes Diagnostik PJOK Kelas 9</h2>
+    <h3>Materi: Senam Lantai (Guling Belakang dan Guling Lenting)</h3>
+    <p>Silakan isi identitas di bawah ini:</p>
+    <label>Nama: <input type="text" id="nama"></label><br><br>
+    <label>Nomor Absen: <input type="number" id="absen"></label><br><br>
+    <label>Kelas: <input type="text" id="kelas"></label><br><br>
+    <button onclick="mulaiTes()">Mulai Tes</button>
+  </div>
+
+  <!-- Halaman Soal -->
+  <div id="quizPage" class="hidden">
+    <form id="quizForm">
+      <h3>Jawablah soal berikut dengan memilih satu jawaban yang benar!</h3>
+
+      <div id="soalContainer"></div>
+
+      <br>
+      <button type="button" onclick="kumpulkan()">Kumpulkan Jawaban</button>
+    </form>
+  </div>
+
+  <!-- Halaman Hasil -->
+  <div id="resultPage" class="hidden">
+    <h2>Hasil Tes Diagnostik</h2>
+    <p><strong>Nama:</strong> <span id="rNama"></span></p>
+    <p><strong>Nomor Absen:</strong> <span id="rAbsen"></span></p>
+    <p><strong>Kelas:</strong> <span id="rKelas"></span></p>
+    <p><strong>Nilai:</strong> <span id="rNilai"></span></p>
+    <hr>
+    <p><strong>Petunjuk:</strong> Tangkap layar (screenshot) halaman ini dan kirim melalui link pengumpulan di bawah:</p>
+    <p><a href="https://forms.gle/" target="_blank">Link Pengumpulan Jawaban</a></p>
+  </div>
+
+</div>
+
+<script>
+const soal = [
+  // Kelas 8 (2 soal)
+  {q:"1. Gerakan guling depan diawali dengan posisi ...", a:["Berdiri tegak","Duduk","Membungkuk","Berbaring"], c:2},
+  {q:"2. Dalam gerakan meroda, arah pandangan kepala adalah ...", a:["Ke depan","Mengikuti arah gerakan","Ke atas","Ke bawah"], c:2},
+
+  // Kelas 9 (16 soal)
+  {q:"3. Gerakan guling belakang diawali dengan posisi tubuh ...", a:["Berdiri tegak","Duduk jongkok","Berbaring telentang","Setengah jongkok"], c:2},
+  {q:"4. Tumpuan awal guling belakang menggunakan ...", a:["Kepala","Punggung","Kedua tangan","Bahunya"], c:3},
+  {q:"5. Gerakan guling belakang harus dilakukan di atas permukaan yang ...", a:["Keras","Licin","Empuk","Bergelombang"], c:3},
+  {q:"6. Pada saat mengguling ke belakang, dagu sebaiknya ...", a:["Ditekuk ke dada","Diarahkan ke atas","Digerakkan ke samping","Dibiarkan bebas"], c:1},
+  {q:"7. Tujuan latihan guling belakang adalah untuk melatih ...", a:["Keseimbangan","Kekuatan kaki","Kelentukan dan keberanian","Kecepatan"], c:3},
+  {q:"8. Guling lenting diawali dari posisi ...", a:["Berbaring telentang","Berdiri tegak","Guling ke depan","Jongkok"], c:3},
+  {q:"9. Pada guling lenting, tolakan dilakukan dengan ...", a:["Kedua tangan dan kaki","Kedua kaki bersamaan","Satu kaki","Punggung dan bahu"], c:2},
+  {q:"10. Gerakan guling lenting berakhir dengan posisi ...", a:["Berbaring","Duduk","Berdiri tegak","Setengah jongkok"], c:3},
+  {q:"11. Unsur utama yang penting dalam guling lenting adalah ...", a:["Daya ledak otot kaki","Kekuatan tangan","Keseimbangan","Ketepatan gerak"], c:1},
+  {q:"12. Agar guling lenting berhasil baik, dorongan pinggul ke atas dilakukan dengan ...", a:["Lemah","Setengah kuat","Kuat dan cepat","Santai"], c:3},
+  {q:"13. Pada guling belakang, posisi tangan saat mengguling adalah ...", a:["Lurus ke samping","Menahan di samping telinga","Ditekuk di dada","Diluruskan ke atas"], c:2},
+  {q:"14. Kesalahan umum pada guling belakang adalah ...", a:["Dagu menempel ke dada","Kepala tidak menunduk","Tolakan kaki kuat","Punggung membulat"], c:2},
+  {q:"15. Sebelum melakukan guling lenting, sebaiknya menguasai ...", a:["Guling belakang","Guling depan","Lompat harimau","Handstand"], c:2},
+  {q:"16. Pada guling lenting, tangan menolak lantai saat posisi ...", a:["Punggung menyentuh matras","Pinggul di atas kepala","Kaki hampir lurus","Kepala menunduk"], c:2},
+  {q:"17. Guling belakang dan lenting termasuk ke dalam cabang olahraga ...", a:["Atletik","Senam lantai","Renang","Keterampilan motorik"], c:2},
+  {q:"18. Alat bantu yang aman digunakan saat latihan senam lantai adalah ...", a:["Matras","Karpet tipis","Rumput","Lantai semen"], c:1},
+
+  // Kelas 10 (2 soal)
+  {q:"19. Lompat kangkang dilakukan di atas ...", a:["Balok titian","Matras dan peti lompat","Lantai kayu","Tikar"], c:2},
+  {q:"20. Lompat harimau diawali dengan gerakan ...", a:["Guling belakang","Melompat ke depan dan berguling","Handstand","Meroda"], c:2}
+];
+
+function mulaiTes(){
+  const nama = document.getElementById('nama').value;
+  const absen = document.getElementById('absen').value;
+  const kelas = document.getElementById('kelas').value;
+  if(nama===""||absen===""||kelas===""){ alert("Lengkapi identitas terlebih dahulu!"); return; }
+  document.getElementById('startPage').classList.add('hidden');
+  document.getElementById('quizPage').classList.remove('hidden');
+  tampilkanSoal();
+}
+
+function tampilkanSoal(){
+  const container = document.getElementById('soalContainer');
+  soal.forEach((s,i)=>{
+    let html = `<div class="question"><p>${s.q}</p>`;
+    s.a.forEach((opt,j)=>{
+      html += `<label><input type="radio" name="soal${i}" value="${j+1}"> ${opt}</label><br>`;
+    });
+    html += `</div>`;
+    container.innerHTML += html;
+  });
+}
+
+function kumpulkan(){
+  let skor = 0;
+  soal.forEach((s,i)=>{
+    const jawaban = document.querySelector(`input[name=soal${i}]:checked`);
+    if(jawaban && parseInt(jawaban.value)===s.c){ skor += 5; }
+  });
+
+  document.getElementById('quizPage').classList.add('hidden');
+  document.getElementById('resultPage').classList.remove('hidden');
+  document.getElementById('rNama').innerText = document.getElementById('nama').value;
+  document.getElementById('rAbsen').innerText = document.getElementById('absen').value;
+  document.getElementById('rKelas').innerText = document.getElementById('kelas').value;
+  document.getElementById('rNilai').innerText = skor;
+}
+</script>
+</body>
+</html>
